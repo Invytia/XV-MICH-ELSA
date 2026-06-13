@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis XV Michelle - Invytia Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mis XV Michelle - Frozen Experience Premium</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;700&family=Pinyon+Script&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -15,295 +15,276 @@
 
     <style>
         :root {
-            --ice-light: #e0f2fe;
-            --ice-mid: #bae6fd;
-            --ice-dark: #7dd3fc;
-            --silver: #f8fafc;
+            --ice-light: #e0f2fe; /* white-blue */
+            --ice-mid: #06b6d4;   /* Cyan neon core */
+            --ice-dark: #075985;  /* Deep glow */
             --text-light: #f1f5f9;
-            
             --font-title: 'Cormorant Garamond', serif;
             --font-name: 'Pinyon Script', cursive;
             --font-body: 'Jost', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: var(--font-body);
             color: var(--text-light);
-            background-color: #050b14;
-            overflow-x: hidden;
-            overscroll-behavior-y: none;
+            background-color: #010409;
+            overflow: hidden; /* Lock scroll during intro */
         }
 
-        /* --- BACKGROUND FIJO --- */
+        /* --- BACKGROUND FIJO & AURORA --- */
         #fixed-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: url('assets/fondo.jpg');
-            background-size: cover;
-            background-position: center;
-            z-index: -2;
+            background-size: cover; background-position: center;
+            z-index: -3;
         }
 
-        /* --- PARTICULAS DE NIEVE --- */
+        .aurora-layer {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.15), transparent 60%),
+                        radial-gradient(circle at 80% 20%, rgba(186, 230, 253, 0.1), transparent 50%);
+            z-index: -2; pointer-events: none; opacity: 0.8;
+            animation: rotateAurora 25s linear infinite; filter: blur(30px);
+        }
+        @keyframes rotateAurora { 100% { transform: rotate(360deg); } }
+
+        /* --- NIEVE CONSTANTE (Partículas) --- */
         #snow-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 2s ease;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
         }
 
-        /* --- APERTURA CORREDIZA PERFECTA --- */
+        /* --- APERTURA DE PUERTAS SEAMLESS --- */
         #door-wrapper {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 10000;
-            display: flex;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 10000; display: flex; overflow: hidden;
         }
 
         .door {
-            position: relative;
-            width: 50vw; 
-            height: 100vh;
-            overflow: hidden;
-            transition: transform 2s cubic-bezier(0.77, 0, 0.175, 1);
+            position: relative; width: 50vw; height: 100vh; overflow: hidden;
+            transition: transform 2.2s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         .door-bg {
-            position: absolute;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
+            position: absolute; top: 0; width: 100vw; height: 100vh;
             background-image: url('assets/apertura.jpg');
-            background-size: cover;
-            background-position: center;
+            background-size: cover; background-position: center;
         }
 
-        /* Técnica para que ambas mitades coincidan a la perfección */
         .door-left .door-bg { left: 0; }
         .door-right .door-bg { left: -50vw; }
 
-        /* Estado Abierto */
         #door-wrapper.open .door-left { transform: translateX(-100%); }
         #door-wrapper.open .door-right { transform: translateX(100%); }
 
         .seal-btn {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10001;
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-            cursor: pointer;
-            transition: opacity 0.5s ease;
-            background: rgba(0, 0, 0, 0.45);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.1);
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10001; display: flex; flex-direction: column; align-items: center; gap: 15px;
+            cursor: pointer; transition: opacity 0.5s ease, transform 0.3s ease;
+            background: rgba(0, 0, 0, 0.5); padding: 30px; border-radius: 25px;
+            backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
+        .seal-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 
         .seal-ring {
-            width: 90px; height: 90px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255,255,255,0.6);
+            width: 90px; height: 90px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255,255,255,0.7);
             display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 30px rgba(186, 230, 253, 0.4);
-            animation: breathe 3s infinite ease-in-out;
+            box-shadow: 0 0 20px rgba(186, 230, 253, 0.3);
+            animation: sealBreathe 3s infinite ease-in-out;
         }
-        .seal-ring i { font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px var(--ice-mid); }
+        .seal-ring i { font-size: 3rem; color: #fff; text-shadow: 0 0 15px var(--ice-light); }
         .seal-text {
             font-family: var(--font-title); letter-spacing: 3px;
-            font-size: 1rem; text-transform: uppercase; color: #fff;
-            font-weight: 600;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+            font-size: 1.1rem; text-transform: uppercase; color: #fff;
+            font-weight: 600; text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
         }
 
-        @keyframes breathe {
-            0%, 100% { box-shadow: 0 0 20px rgba(186, 230, 253, 0.2); transform: scale(1); }
-            50% { box-shadow: 0 0 40px rgba(186, 230, 253, 0.6); transform: scale(1.05); }
+        @keyframes sealBreathe {
+            0%, 100% { box-shadow: 0 0 20px rgba(186, 230, 253, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(186, 230, 253, 0.7); transform: scale(1.05); }
         }
 
-        /* --- GLASSMORPHISM CONTENEDOR AJUSTADO --- */
+        /* --- CONTENEDOR PRINCIPAL INMERSIVO --- */
         #scroll-wrapper {
-            position: relative;
-            width: 100%; min-height: 100vh;
-            display: none;
-            padding: 40px 15px;
+            position: relative; width: 100%; height: 100vh;
+            display: none; overflow-y: scroll; scroll-behavior: smooth;
+            padding: 30px 15px;
         }
 
         .glass-frame {
-            max-width: 550px;
-            margin: 0 auto;
-            /* MUCHO MÁS TRANSPARENTE */
-            background: rgba(12, 20, 35, 0.12); 
-            /* DESENFOQUE SUTIL */
-            backdrop-filter: blur(3px); 
-            -webkit-backdrop-filter: blur(3px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 25px;
-            padding: 60px 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.1);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            max-width: 550px; margin: 0 auto;
+            background: rgba(8, 15, 25, 0.15); /* Ultra transparente */
+            backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px; padding: 70px 25px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.03);
+            position: relative; text-align: center;
+        }
+        
+        /* Efecto de escarcha brillante interna */
+        .glass-frame::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3%3Cfilter id="noiseFilter"%3%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3%3C/filter%3%3Crect width="100%" height="100%" filter="noiseFilter"/%3%3C/svg%3%3E');
+            opacity: 0.02; pointer-events: none; border-radius: 30px;
         }
 
-        /* Sombras para textos sobre fondo transparente */
-        .glass-frame h1, .glass-frame h2, .glass-frame h3, .glass-frame p, .glass-frame span {
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+        /* Divisor Orgánico */
+        .section-divider {
+            width: 100px; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--ice-mid), transparent);
+            margin: 40px auto; opacity: 0.5;
         }
 
-        /* Aurora sutil dentro del frame */
-        .glass-aurora {
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(186, 230, 253, 0.05), transparent 60%),
-                        radial-gradient(circle at 80% 20%, rgba(125, 211, 252, 0.02), transparent 50%);
-            z-index: -1;
-            pointer-events: none;
-            animation: rotateAurora 20s linear infinite;
-        }
-        @keyframes rotateAurora { 100% { transform: rotate(360deg); } }
-
-        /* --- TIPOGRAFÍA Y ESTILOS --- */
-        h1.name {
-            font-family: var(--font-name);
-            font-size: 5.5rem;
-            line-height: 1.1;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(186, 230, 253, 0.6), 2px 2px 5px rgba(0,0,0,0.8);
+        /* --- EFECTOS NEÓN DE TEXTO --- */
+        /* Michelle - Neón Blanco Fiel */
+        h1.name-neon {
+            font-family: var(--font-name); font-weight: normal;
+            font-size: 5.8rem; line-height: 1; color: #fff;
             margin: 20px 0;
-            font-weight: normal;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #fff,
+                0 0 30px var(--ice-light),
+                0 0 45px var(--ice-light),
+                0 0 60px var(--ice-mid);
+            animation: flickerName 4s infinite alternate;
         }
 
-        h2, h3 {
-            font-family: var(--font-title);
-            color: var(--ice-mid);
-            font-weight: 400;
-            letter-spacing: 2px;
+        @keyframes flickerName {
+            0%, 100% { opacity: 1; }
+            41% { opacity: 1; }
+            42% { opacity: 0.8; }
+            43% { opacity: 1; }
+            45% { opacity: 1; }
+            46% { opacity: 0.7; }
+            47% { opacity: 1; }
         }
 
-        .subtitle { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 10px; color: var(--silver); }
-        .section-title { font-size: 2rem; margin: 40px 0 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px;}
-        
-        .divider-icon { font-size: 1.5rem; color: var(--ice-light); opacity: 0.9; margin: 20px 0; filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.8)); }
-        
-        .message {
-            font-family: var(--font-title);
-            font-style: italic; font-size: 1.3rem; line-height: 1.6;
-            color: var(--silver); margin: 30px 0; padding: 0 15px;
+        /* Títulos Sección - Neón Azul Cyan */
+        h2.section-neon {
+            font-family: var(--font-title); font-weight: 400;
+            font-size: 2rem; color: #e0f2fe;
+            letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: 25px;
+            text-shadow: 
+                0 0 5px var(--ice-light),
+                0 0 10px var(--ice-mid),
+                0 0 15px var(--ice-mid),
+                0 0 20px var(--ice-mid);
         }
 
-        .names-block { margin: 20px 0; }
-        .names-block p { font-size: 1.1rem; margin: 5px 0; color: #fff; }
-        .names-label { font-size: 0.8rem; color: var(--ice-dark); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block;}
+        h3 { font-family: var(--font-title); color: #fff; font-weight: 400; margin-bottom: 5px;}
+        .subtitle { font-size: 1.2rem; letter-spacing: 5px; color: #fff; opacity: 0.9; text-transform: uppercase; }
+        .message { font-family: var(--font-title); font-style: italic; font-size: 1.3rem; line-height: 1.6; color: #f1f5f9; margin: 30px 0;}
+
+        /* Iconos con Glow */
+        .glow-icon { font-size: 2.5rem; color: var(--ice-mid); margin-bottom: 15px; filter: drop-shadow(0 0 8px var(--ice-mid));}
 
         /* --- CALENDARIO PREMIUM --- */
         .premium-calendar {
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 25px 20px;
-            margin: 30px auto;
-            max-width: 320px;
+            background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px; padding: 25px; margin: 30px auto; max-width: 320px;
         }
-        .cal-month { font-family: var(--font-title); font-size: 1.6rem; color: var(--ice-mid); margin-bottom: 20px; text-shadow: none; }
-        .cal-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;
-            text-align: center; font-size: 0.9rem;
-        }
-        .cal-head { color: var(--ice-dark); font-weight: 500; font-size: 0.8rem; text-shadow: none;}
-        .cal-day { padding: 5px; color: rgba(255,255,255,0.9); text-shadow: none;}
+        .cal-month { font-family: var(--font-title); font-size: 1.6rem; color: var(--ice-mid); margin-bottom: 15px; text-shadow: 0 0 10px var(--ice-mid);}
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center; font-size: 0.9rem; }
+        .cal-head { color: var(--ice-dark); font-weight: 700; font-size: 0.8rem; }
+        .cal-day { padding: 5px; color: #fff; }
         .cal-active {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid var(--ice-mid);
-            border-radius: 50%;
-            color: #fff;
-            position: relative;
-            box-shadow: 0 0 15px rgba(186, 230, 253, 0.5);
+            background: rgba(255, 255, 255, 0.15); border: 1px solid var(--ice-mid);
+            border-radius: 50%; color: #fff; font-weight: 700;
+            box-shadow: 0 0 15px var(--ice-mid);
         }
 
-        /* --- CUENTA REGRESIVA --- */
-        .countdown { display: flex; justify-content: center; gap: 15px; margin: 40px 0; }
-        .time-box {
-            display: flex; flex-direction: column; align-items: center;
-            min-width: 60px;
-        }
-        .time-num { font-family: var(--font-title); font-size: 2.2rem; color: #fff; line-height: 1;}
-        .time-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ice-dark); margin-top: 5px;}
-        .time-sep { font-family: var(--font-title); font-size: 2rem; color: rgba(255,255,255,0.5); }
+        /* --- CUENTA ATRÁS --- */
+        .countdown { display: flex; justify-content: center; gap: 15px; margin: 40px 0; font-family: var(--font-title);}
+        .time-box { display: flex; flex-direction: column; align-items: center; min-width: 65px; }
+        .time-num { font-size: 2.5rem; color: #fff; line-height: 1; text-shadow: 0 0 10px var(--ice-light); }
+        .time-label { font-size: 0.7rem; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 1px; color: var(--ice-mid); margin-top: 5px;}
+        .time-sep { font-size: 2rem; color: rgba(255,255,255,0.3); align-self: center; }
 
         /* --- BOTONES PREMIUM --- */
         .btn {
             display: inline-flex; justify-content: center; align-items: center; gap: 10px;
             width: 100%; max-width: 280px; margin: 10px auto; padding: 16px 20px;
-            background: rgba(0, 0, 0, 0.4);
-            color: var(--ice-light);
-            border: 1px solid rgba(186, 230, 253, 0.4);
-            border-radius: 30px;
-            font-family: var(--font-body); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(6, 182, 212, 0.1));
+            color: #fff; border: 1px solid rgba(6, 182, 212, 0.5);
+            border-radius: 30px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
             text-decoration: none; cursor: pointer; transition: all 0.3s ease;
-            text-shadow: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .btn:hover { background: rgba(186, 230, 253, 0.2); border-color: var(--ice-mid); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); color: #fff;}
-        .btn-wsp { background: rgba(37, 211, 102, 0.2); border-color: #25d366; color: #fff; }
-        .btn-wsp:hover { background: rgba(37, 211, 102, 0.4); border-color: #25d366; }
-
-        /* --- LOCATIONS --- */
-        .location-box { margin-bottom: 50px; background: rgba(0,0,0,0.3); padding: 25px 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .location-icon { font-size: 2.5rem; color: var(--ice-dark); margin-bottom: 15px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8)); }
-        .map-iframe { width: 100%; height: 220px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); margin: 20px 0; filter: grayscale(10%) contrast(1.1); }
-
-        /* --- GALERÍA --- */
-        .gallery-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px;
+        .btn:hover { border-color: var(--ice-mid); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4); }
+        
+        .btn-wsp { 
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.4), rgba(37, 211, 102, 0.1));
+            border-color: rgba(37, 211, 102, 0.6);
         }
+        .btn-wsp:hover { border-color: #25d366; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); }
+
+        /* --- LOCATIONS CARDS --- */
+        .location-card { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05);}
+        .map-iframe { width: 100%; height: 230px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin: 20px 0; }
+
+        /* --- CÓDIGO VESTIMENTA REDESIGN --- */
+        .vestimenta-box {
+            background: rgba(0,0,0,0.3); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px;
+        }
+        .vestimenta-prohibido {
+            font-size: 0.9rem; color: #fda4af; margin-top: 15px; background: rgba(159, 18, 57, 0.2);
+            padding: 10px; border-radius: 8px; border: 1px solid rgba(159, 18, 57, 0.3);
+        }
+
+        /* --- GALERÍA PREMIUM --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px; }
         .gallery-item {
-            width: 100%; aspect-ratio: 3/4;
-            border-radius: 12px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.2);
-            cursor: pointer; position: relative;
+            width: 100%; aspect-ratio: 3/4; border-radius: 10px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); cursor: pointer; position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: all 0.3s ease;
         }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item:hover { transform: scale(1.03); border-color: var(--ice-mid); box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Lightbox */
+        /* Lightbox Inmersivo */
         #lightbox {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
             z-index: 20000; display: none; justify-content: center; align-items: center;
         }
-        #lightbox img { max-width: 95%; max-height: 90vh; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); }
-        .close-btn { position: absolute; top: 30px; right: 30px; font-size: 2rem; color: #fff; cursor: pointer; }
+        #lightbox img { max-width: 95%; max-height: 90vh; border-radius: 5px; box-shadow: 0 0 30px rgba(186, 230, 253, 0.3); }
+        .close-lb { position: absolute; top: 25px; right: 25px; font-size: 2rem; color: #fff; cursor: pointer; opacity: 0.7; }
+        .close-lb:hover { opacity: 1; }
 
-        /* --- INPUT --- */
-        .input-glass {
-            width: 100%; max-width: 280px; padding: 15px 20px; margin-bottom: 15px;
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 30px; color: #fff; font-family: var(--font-body); font-size: 1rem;
-            text-align: center; outline: none; transition: 0.3s;
-            text-shadow: none;
-        }
-        .input-glass::placeholder { color: rgba(255,255,255,0.6); text-shadow: none; }
-        .input-glass:focus { border-color: var(--ice-mid); background: rgba(0,0,0,0.7); }
-
-        /* --- AUDIO STICKY --- */
+        /* --- AUDIO STICKY PREMIUM --- */
         .audio-float {
             position: fixed; bottom: 25px; right: 25px;
             width: 55px; height: 55px; border-radius: 50%;
-            background: rgba(12, 20, 35, 0.8); backdrop-filter: blur(5px);
-            border: 1px solid rgba(186, 230, 253, 0.4);
+            background: rgba(8, 15, 25, 0.8); backdrop-filter: blur(5px);
+            border: 1px solid rgba(6, 182, 212, 0.5);
             display: flex; justify-content: center; align-items: center;
-            color: #fff; font-size: 1.2rem; cursor: pointer; z-index: 15000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s;
+            color: #fff; font-size: 1.3rem; cursor: pointer; z-index: 15000;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); transition: all 0.3s ease;
         }
-        .audio-float.playing { box-shadow: 0 0 20px rgba(186, 230, 253, 0.4); border-color: var(--ice-mid); }
-        .audio-float:active { transform: scale(0.9); }
+        .audio-float.playing { animation: audioPulse 2s infinite; border-color: var(--ice-mid); }
+        @keyframes audioPulse { 0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); } 50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.6); } }
+
+        /* --- INPUT GLASS --- */
+        .input-glass {
+            width: 100%; max-width: 280px; padding: 15px 20px; margin-bottom: 15px;
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px; color: #fff; font-family: var(--font-body); font-size: 1rem;
+            text-align: center; outline: none; transition: 0.3s;
+        }
+        .input-glass:focus { border-color: var(--ice-mid); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(6, 182, 212, 0.2); }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            h1.name-neon { font-size: 4.8rem; }
+            .glass-frame { padding: 50px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -312,6 +293,7 @@
     <audio id="audio-sfx" src="assets/destello.mp3"></audio>
 
     <div id="fixed-bg"></div>
+    <div class="aurora-layer"></div>
     <canvas id="snow-canvas"></canvas>
 
     <div id="door-wrapper">
@@ -326,31 +308,37 @@
 
     <div id="scroll-wrapper">
         <div class="glass-frame">
-            <div class="glass-aurora"></div>
-
-            <div data-aos="fade-down" data-aos-duration="1500">
-                <h2 class="subtitle">Mis XV Años</h2>
-                <h1 class="name">Michelle</h1>
-                <i class="fas fa-gem divider-icon"></i>
+            
+            <div data-aos="fade-down" data-aos-duration="1800">
+                <p class="subtitle">Mis XV Años</p>
+                <h1 class="name-neon">Michelle</h1>
+                <i class="fas fa-gem glow-icon" style="font-size: 1.5rem; opacity: 0.8;"></i>
             </div>
+
+            <div class="section-divider"></div>
 
             <p class="message" data-aos="fade-up">
                 "Con inmensa alegría y gratitud a Dios, celebramos los 15 años de nuestra querida Mich. Acompáñanos en este día tan especial para compartir juntos la magia, los sueños y la felicidad de esta hermosa etapa de su vida."
             </p>
 
-            <div data-aos="fade-up" class="names-block" style="margin-top: 40px;">
-                <span class="names-label">Mis Padres</span>
-                <p>Ruth Aleli Barragan Zamora</p>
-                <p>Rogelio Torres Jimenez</p>
+            <div class="section-divider"></div>
+
+            <div data-aos="fade-up">
+                <div class="names-block" style="margin-bottom: 25px;">
+                    <span class="names-label" style="font-size: 0.8rem; color: var(--ice-mid); text-transform: uppercase; letter-spacing: 2px;">Mis Padres</span>
+                    <p style="font-size: 1.1rem; color: #fff; margin-top: 5px;">Ruth Aleli Barragan Zamora</p>
+                    <p style="font-size: 1.1rem; color: #fff;">Rogelio Torres Jimenez</p>
+                </div>
+                <div class="names-block">
+                    <span class="names-label" style="font-size: 0.8rem; color: var(--ice-mid); text-transform: uppercase; letter-spacing: 2px;">Mis Padrinos</span>
+                    <p style="font-size: 1.1rem; color: #fff; margin-top: 5px;">Alma Lidia Nequiz Zamora</p>
+                    <p style="font-size: 1.1rem; color: #fff;">Alberto Torres Barriga</p>
+                </div>
             </div>
 
-            <div data-aos="fade-up" class="names-block">
-                <span class="names-label">Mis Padrinos</span>
-                <p>Alma Lidia Nequiz Zamora</p>
-                <p>Alberto Torres Barriga</p>
-            </div>
+            <div class="section-divider"></div>
 
-            <h2 class="section-title" data-aos="fade-up">El Gran Día</h2>
+            <h2 class="section-neon" data-aos="fade-up">El Gran Día</h2>
 
             <div class="premium-calendar" data-aos="zoom-in">
                 <div class="cal-month">Agosto 2026</div>
@@ -371,68 +359,78 @@
 
             <button class="btn" onclick="saveDate()"><i class="far fa-calendar-plus"></i> Guardar Fecha</button>
 
-            <h2 class="section-title" data-aos="fade-up">Ubicaciones</h2>
+            <div class="section-divider"></div>
 
-            <div class="location-box" data-aos="fade-up">
-                <i class="fas fa-church location-icon"></i>
+            <h2 class="section-neon" data-aos="fade-up">Ubicaciones</h2>
+
+            <div class="location-card" data-aos="fade-up">
+                <i class="fas fa-church glow-icon"></i>
                 <h3>Ceremonia Religiosa</h3>
-                <p style="margin: 10px 0; font-size: 1.1rem;">6:30 P.M.</p>
-                <p style="color: var(--silver); font-size: 0.9rem;">Instalaciones de Eventos Casablanca</p>
+                <p style="font-size: 1.1rem; margin: 5px 0;">6:30 P.M.</p>
+                <p style="color: #cbd5e1; font-size: 0.9rem;">Instalaciones de Eventos Casablanca</p>
                 <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15053.483167195862!2d-99.1677!3d19.4284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzQyLjIiTiA5OcKwMTAnMDMuNyJX!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx" loading="lazy"></iframe>
                 <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn"><i class="fas fa-map-marker-alt"></i> Ver en Mapa</a>
             </div>
 
-            <div class="location-box" data-aos="fade-up">
-                <i class="fas fa-glass-cheers location-icon"></i>
+            <div class="location-card" data-aos="fade-up" style="border:none;">
+                <i class="fas fa-glass-cheers glow-icon"></i>
                 <h3>Recepción</h3>
-                <p style="margin: 10px 0; font-size: 1.1rem;">7:00 P.M.</p>
-                <p style="color: var(--silver); font-size: 0.9rem;">Eventos Casablanca</p>
+                <p style="font-size: 1.1rem; margin: 5px 0;">7:00 P.M.</p>
+                <p style="color: #cbd5e1; font-size: 0.9rem;">Eventos Casablanca</p>
                 <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15053.483167195862!2d-99.1677!3d19.4284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzQyLjIiTiA5OcKwMTAnMDMuNyJX!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx" loading="lazy"></iframe>
                 <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn"><i class="fas fa-map-marker-alt"></i> Ver en Mapa</a>
             </div>
 
-            <h2 class="section-title" data-aos="fade-up">Código de Vestimenta</h2>
-            <div data-aos="zoom-in" style="margin-bottom: 40px; background: rgba(0,0,0,0.3); padding: 25px 15px; border-radius: 15px;">
-                <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--ice-mid); margin-bottom: 15px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8));"></i>
-                <h3 style="font-family: var(--font-body); font-weight: 500; font-size: 1.2rem; letter-spacing: 3px; color: #fff;">FORMAL</h3>
-                <p style="font-size: 0.85rem; color: #ff8787; margin-top: 15px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,135,135,0.2);">
-                    Favor de evitar los colores: Azul cielo, Azul marino y Plateado.
+            <div class="section-divider"></div>
+
+            <h2 class="section-neon" data-aos="fade-up">Código de Vestimenta</h2>
+            <div class="vestimenta-box" data-aos="zoom-in">
+                <i class="fas fa-user-tie glow-icon" style="font-size: 3rem;"></i>
+                <h3 style="letter-spacing: 2px; font-weight: 500;">FORMAL</h3>
+                <p class="vestimenta-prohibido">
+                    <i class="fas fa-exclamation-triangle"></i> Favor de evitar: Azul cielo, Azul marino y Plateado.
                 </p>
             </div>
 
-            <h2 class="section-title" data-aos="fade-up">Mesa de Regalos</h2>
-            <div data-aos="fade-up" style="margin-bottom: 50px;">
-                <p style="margin-bottom: 25px; color: var(--silver);">Tu presencia es mi mejor regalo, pero si deseas tener un detalle conmigo:</p>
+            <div class="section-divider"></div>
+
+            <h2 class="section-neon" data-aos="fade-up">Mesa de Regalos</h2>
+            <div data-aos="fade-up">
+                <p style="margin-bottom: 25px; color: #cbd5e1;">Tu presencia es mi mejor regalo, pero si deseas tener un detalle conmigo:</p>
                 
-                <a href="https://mesaderegalos.liverpool.com.mx/gestiondeeventos/listaderegalos/52003572" target="_blank" class="btn" style="margin-bottom: 20px;">
+                <a href="https://mesaderegalos.liverpool.com.mx/gestiondeeventos/listaderegalos/52003572" target="_blank" class="btn">
                     <i class="fas fa-gift"></i> Mesa Liverpool
                 </a>
                 
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-                    <i class="fas fa-envelope-open-text" style="font-size: 2rem; color: var(--ice-mid); margin-bottom: 10px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8));"></i>
-                    <h3 style="font-family: var(--font-body); font-size: 1.1rem; color: #fff;">Lluvia de Sobres</h3>
-                    <p style="font-size: 0.85rem; color: var(--silver); margin-top: 5px;">Habrá un buzón en la recepción</p>
+                <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <i class="fas fa-envelope-open-text glow-icon" style="font-size: 2rem;"></i>
+                    <h3 style="font-size: 1.1rem;">Lluvia de Sobres</h3>
+                    <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 5px;">Habrá un buzón en la recepción para tu obsequio.</p>
                 </div>
             </div>
 
-            <h2 class="section-title" data-aos="fade-up">Nuestros Momentos</h2>
+            <div class="section-divider"></div>
+
+            <h2 class="section-neon" data-aos="fade-up">Galería de Fotos</h2>
             <div class="gallery-grid" data-aos="fade-up">
-                <div class="gallery-item" onclick="openLightbox('assets/foto1.jpg')"><img src="assets/foto1.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+1'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto2.jpg')"><img src="assets/foto2.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+2'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto3.jpg')"><img src="assets/foto3.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+3'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto4.jpg')"><img src="assets/foto4.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+4'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto5.jpg')"><img src="assets/foto5.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+5'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto6.jpg')"><img src="assets/foto6.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+6'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto7.jpg')"><img src="assets/foto7.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+7'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto8.jpg')"><img src="assets/foto8.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+8'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto9.jpg')"><img src="assets/foto9.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+9'"></div>
-                <div class="gallery-item" onclick="openLightbox('assets/foto10.jpg')"><img src="assets/foto10.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+10'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto1.jpg')"><img src="assets/foto1.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich1'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto2.jpg')"><img src="assets/foto2.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich2'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto3.jpg')"><img src="assets/foto3.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich3'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto4.jpg')"><img src="assets/foto4.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich4'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto5.jpg')"><img src="assets/foto5.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich5'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto6.jpg')"><img src="assets/foto6.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich6'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto7.jpg')"><img src="assets/foto7.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich7'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto8.jpg')"><img src="assets/foto8.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich8'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto9.jpg')"><img src="assets/foto9.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich9'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto10.jpg')"><img src="assets/foto10.jpg" onerror="this.src='https://placehold.co/400x533/080f19/e0f2fe?text=Mich10'"></div>
             </div>
 
-            <h2 class="section-title" data-aos="fade-up" style="margin-top: 60px;">Confirmar Asistencia</h2>
+            <div class="section-divider"></div>
+
+            <h2 class="section-neon" data-aos="fade-up">Confirmación</h2>
             <div data-aos="zoom-in" style="margin-bottom: 20px;">
-                <p style="margin-bottom: 20px; color: var(--silver);">Por favor, ingresa tu nombre y confirma vía WhatsApp.</p>
-                <input type="text" id="guest-name" class="input-glass" placeholder="Tu nombre / familia">
+                <p style="margin-bottom: 20px; color: #cbd5e1;">Por favor, ingresa tu nombre y confirma vía WhatsApp antes del evento.</p>
+                <input type="text" id="guest-name" class="input-glass" placeholder="Nombre / Familia">
                 <button class="btn btn-wsp" onclick="sendRSVP()">
                     <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Confirmar Asistencia
                 </button>
@@ -445,8 +443,8 @@
     </div>
 
     <div id="lightbox" onclick="closeLightbox(event)">
-        <i class="fas fa-times close-btn" onclick="closeLightbox(event)"></i>
-        <img id="lightbox-img" src="">
+        <i class="fas fa-times close-lb"></i>
+        <img id="lightbox-img" src="" alt="Zoom Photo">
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -460,33 +458,59 @@
         const audioIcon = document.getElementById('audio-icon');
         let isPlaying = false;
 
-        // --- APERTURA ---
+        // --- LÓGICA DE APERTURA PREMUM ---
         function openInvitation() {
+            // Ocultar botón inmediatamente
             document.querySelector('.seal-btn').style.opacity = '0';
+            
+            // Sonido de destello de hielo
             sfx.play().catch(()=>{});
             
-            // Abrir puertas
+            // Animación de puertas
             const wrapper = document.getElementById('door-wrapper');
             wrapper.classList.add('open');
 
-            // Mostrar contenido debajo
+            // Habilitar Scroll del contenido y mostrarlo
+            document.body.style.overflow = 'auto';
             document.getElementById('scroll-wrapper').style.display = 'block';
             
-            // Iniciar Nieve y Musica
+            // Iniciar Nieve Constante
+            startSnowfall();
+            
+            // Iniciar música con fade in suave
             setTimeout(() => {
-                startSnow();
+                song.volume = 0;
                 song.play().then(() => {
                     isPlaying = true;
                     audioBtn.style.display = 'flex';
                     audioBtn.classList.add('playing');
+                    fadeAudioIn(song);
                 }).catch(()=>{
-                    // Si el navegador bloquea autoplay
+                    // Autoplay bloqueado, mostrar botón mudo
                     audioBtn.style.display = 'flex';
                     audioIcon.className = "fas fa-volume-mute";
                 });
-                wrapper.style.display = 'none'; // Quitar del DOM visual
-                buildCalendar(); // Construir calendario
-            }, 1800);
+                
+                // Limpieza del DOM
+                setTimeout(()=>wrapper.style.display = 'none', 2500);
+                
+                // Construir calendario y AOS refresh
+                buildPremiumCalendar();
+                AOS.refresh();
+            }, 1000);
+        }
+
+        function fadeAudioIn(audio) {
+            let volume = 0;
+            const interval = setInterval(() => {
+                volume += 0.05;
+                if (volume >= 1) {
+                    audio.volume = 1;
+                    clearInterval(interval);
+                } else {
+                    audio.volume = volume;
+                }
+            }, 100);
         }
 
         // --- AUDIO CONTROL ---
@@ -504,9 +528,9 @@
         }
 
         // --- CALENDARIO AGOSTO 2026 ---
-        function buildCalendar() {
+        function buildPremiumCalendar() {
             const grid = document.getElementById('calendar-grid');
-            // Agosto 2026 inicia en sábado (índice 6)
+            // Agosto 2026 empieza en sábado (índice 6)
             for(let i=0; i<6; i++) {
                 let div = document.createElement('div');
                 grid.appendChild(div);
@@ -524,7 +548,10 @@
         setInterval(() => {
             const now = new Date().getTime();
             const diff = targetDate - now;
-            if(diff < 0) return; // Evento pasó
+            if(diff < 0) {
+                document.getElementById('countdown').innerHTML = "<h3>¡Hoy es el gran día!</h3>";
+                return;
+            }
 
             document.getElementById('cd-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
             document.getElementById('cd-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
@@ -534,37 +561,39 @@
 
         // --- SAVE THE DATE ---
         function saveDate() {
-            const url = "https://www.google.com/calendar/render?action=TEMPLATE&text=Mis+XV+Michelle&dates=20260821T233000Z/20260822T080000Z&details=Acomp%C3%A1%C3%B1anos+en+este+d%C3%ADa+tan+especial.&location=Eventos+Casablanca";
-            window.open(url, '_blank');
+            const googleUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text=Mis+XV+Michelle&dates=20260821T233000Z/20260822T080000Z&details=Acomp%C3%A1%C3%B1anos+a+celebrar+los+XV+años+de+Michelle.&location=Eventos+Casablanca";
+            window.open(googleUrl, '_blank');
         }
 
         // --- WHATSAPP RSVP ---
         function sendRSVP() {
             const name = document.getElementById('guest-name').value.trim();
             if(!name) { alert("Por favor, ingresa tu nombre."); return; }
-            const msg = `¡Hola! Con mucha alegría confirmo mi asistencia a los XV años de Michelle. Mi nombre es: ${name}`;
-            window.open(`https://wa.me/525544492911?text=${encodeURIComponent(msg)}`, '_blank');
+            const phone = "525544492911";
+            const msg = encodeURIComponent(`¡Hola Michelle! Con mucha alegría confirmo mi asistencia a tus XV años. Mi nombre/familia es: ${name}`);
+            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
         }
 
-        // --- LIGHTBOX GALERÍA ---
+        // --- LIGHTBOX INMERSIVO ---
         const lightbox = document.getElementById('lightbox');
         const lbImg = document.getElementById('lightbox-img');
         
         function openLightbox(src) {
             lbImg.src = src;
             lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Lock scroll
         }
         function closeLightbox(e) {
-            if(e.target.id === 'lightbox' || e.target.classList.contains('close-btn')) {
+            if(e.target.id === 'lightbox' || e.target.classList.contains('close-lb')) {
                 lightbox.style.display = 'none';
                 lbImg.src = '';
+                document.body.style.overflow = 'auto'; // Unlock
             }
         }
 
-        // --- PARTICULAS DE NIEVE PREMIUM ---
-        function startSnow() {
+        // --- SISTEMA DE NIEVE PREMIUM (Canvas) ---
+        function startSnowfall() {
             const canvas = document.getElementById('snow-canvas');
-            canvas.style.opacity = '1';
             const ctx = canvas.getContext('2d');
             
             function resize() {
@@ -575,19 +604,21 @@
             resize();
 
             const flakes = [];
-            for(let i = 0; i < 70; i++) {
+            // Aumentado a 120 copos para más brillo
+            for(let i = 0; i < 120; i++) {
                 flakes.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    r: Math.random() * 2 + 1, // radio
-                    d: Math.random() * 70, // densidad
-                    a: Math.random() * Math.PI * 2 // angulo oscilacion
+                    r: Math.random() * 2 + 0.8, // radio
+                    d: Math.random() * 120, // densidad
+                    a: Math.random() * Math.PI * 2, // angulo oscilacion
+                    v: Math.random() * 0.5 + 0.2 // velocidad caída
                 });
             }
 
             function drawSnow() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+                ctx.fillStyle = "rgba(224, 242, 254, 0.7)"; // Ice light color
                 ctx.beginPath();
                 for(let f of flakes) {
                     ctx.moveTo(f.x, f.y);
@@ -600,9 +631,9 @@
 
             function updateSnow() {
                 for(let f of flakes) {
-                    f.y += Math.cos(f.d) + 0.5 + f.r / 2; // velocidad caida
+                    f.y += f.v + f.r / 2; // velocidad basada en tamaño
                     f.a += 0.01;
-                    f.x += Math.sin(f.a) * 0.5; // viento lateral
+                    f.x += Math.sin(f.a) * 0.3; // oscilación suave
                     
                     if(f.y > canvas.height) {
                         f.y = -10;
