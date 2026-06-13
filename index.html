@@ -56,7 +56,7 @@
             transition: opacity 2s ease;
         }
 
-        /* --- APERTURA CORREDIZA --- */
+        /* --- APERTURA CORREDIZA PERFECTA --- */
         #door-wrapper {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -67,23 +67,25 @@
 
         .door {
             position: relative;
-            width: 50%; height: 100%;
+            width: 50vw; 
+            height: 100vh;
             overflow: hidden;
             transition: transform 2s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        .door-img {
+        .door-bg {
             position: absolute;
             top: 0;
-            width: 200%; /* El doble de su contenedor (50%) para cubrir toda la pantalla */
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background-image: url('assets/apertura.jpg');
             background-size: cover;
             background-position: center;
         }
 
-        .door-left .door-img { left: 0; }
-        .door-right .door-img { right: 0; transform: translateX(50%); }
+        /* Técnica para que ambas mitades coincidan a la perfección */
+        .door-left .door-bg { left: 0; }
+        .door-right .door-bg { left: -50vw; }
 
         /* Estado Abierto */
         #door-wrapper.open .door-left { transform: translateX(-100%); }
@@ -94,25 +96,31 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10001;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
             cursor: pointer;
             transition: opacity 0.5s ease;
+            background: rgba(0, 0, 0, 0.45); /* Fondo oscuro para legibilidad */
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .seal-ring {
-            width: 100px; height: 100px;
+            width: 90px; height: 90px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255,255,255,0.6);
             display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 30px rgba(186, 230, 253, 0.3);
+            box-shadow: 0 0 30px rgba(186, 230, 253, 0.4);
             animation: breathe 3s infinite ease-in-out;
         }
         .seal-ring i { font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px var(--ice-mid); }
         .seal-text {
-            font-family: var(--font-title); letter-spacing: 2px;
-            font-size: 0.9rem; text-transform: uppercase; color: #fff;
+            font-family: var(--font-title); letter-spacing: 3px;
+            font-size: 1rem; text-transform: uppercase; color: #fff;
+            font-weight: 600;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
         }
 
         @keyframes breathe {
@@ -120,35 +128,40 @@
             50% { box-shadow: 0 0 40px rgba(186, 230, 253, 0.6); transform: scale(1.05); }
         }
 
-        /* --- GLASSMORPHISM CONTENEDOR --- */
+        /* --- GLASSMORPHISM CONTENEDOR AJUSTADO --- */
         #scroll-wrapper {
             position: relative;
             width: 100%; min-height: 100vh;
-            display: none; /* Se muestra al abrir */
+            display: none;
             padding: 40px 15px;
         }
 
         .glass-frame {
             max-width: 550px;
             margin: 0 auto;
-            background: rgba(12, 20, 35, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(12, 20, 35, 0.25); /* Más transparente */
+            backdrop-filter: blur(8px); /* Menos blur para ver el fondo */
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 25px;
             padding: 60px 30px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.1);
             text-align: center;
             position: relative;
             overflow: hidden;
+        }
+
+        /* Sombras para textos sobre fondo transparente */
+        .glass-frame h1, .glass-frame h2, .glass-frame h3, .glass-frame p, .glass-frame span {
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
         }
 
         /* Aurora sutil dentro del frame */
         .glass-aurora {
             position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(186, 230, 253, 0.1), transparent 60%),
-                        radial-gradient(circle at 80% 20%, rgba(125, 211, 252, 0.05), transparent 50%);
+            background: radial-gradient(circle at 50% 50%, rgba(186, 230, 253, 0.05), transparent 60%),
+                        radial-gradient(circle at 80% 20%, rgba(125, 211, 252, 0.02), transparent 50%);
             z-index: -1;
             pointer-events: none;
             animation: rotateAurora 20s linear infinite;
@@ -161,7 +174,7 @@
             font-size: 5.5rem;
             line-height: 1.1;
             color: #fff;
-            text-shadow: 0 0 20px rgba(186, 230, 253, 0.5);
+            text-shadow: 0 0 20px rgba(186, 230, 253, 0.6), 2px 2px 5px rgba(0,0,0,0.8);
             margin: 20px 0;
             font-weight: normal;
         }
@@ -174,9 +187,9 @@
         }
 
         .subtitle { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 10px; color: var(--silver); }
-        .section-title { font-size: 2rem; margin: 40px 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;}
+        .section-title { font-size: 2rem; margin: 40px 0 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px;}
         
-        .divider-icon { font-size: 1.5rem; color: var(--ice-light); opacity: 0.7; margin: 20px 0; }
+        .divider-icon { font-size: 1.5rem; color: var(--ice-light); opacity: 0.9; margin: 20px 0; filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.8)); }
         
         .message {
             font-family: var(--font-title);
@@ -190,27 +203,27 @@
 
         /* --- CALENDARIO PREMIUM --- */
         .premium-calendar {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.35); /* Un poco más oscuro para constraste */
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 15px;
             padding: 25px 20px;
             margin: 30px auto;
             max-width: 320px;
         }
-        .cal-month { font-family: var(--font-title); font-size: 1.6rem; color: var(--ice-mid); margin-bottom: 20px; }
+        .cal-month { font-family: var(--font-title); font-size: 1.6rem; color: var(--ice-mid); margin-bottom: 20px; text-shadow: none; }
         .cal-grid {
             display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;
             text-align: center; font-size: 0.9rem;
         }
-        .cal-head { color: var(--ice-dark); font-weight: 500; font-size: 0.8rem; }
-        .cal-day { padding: 5px; color: rgba(255,255,255,0.8); }
+        .cal-head { color: var(--ice-dark); font-weight: 500; font-size: 0.8rem; text-shadow: none;}
+        .cal-day { padding: 5px; color: rgba(255,255,255,0.9); text-shadow: none;}
         .cal-active {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             border: 1px solid var(--ice-mid);
             border-radius: 50%;
             color: #fff;
             position: relative;
-            box-shadow: 0 0 15px rgba(186, 230, 253, 0.4);
+            box-shadow: 0 0 15px rgba(186, 230, 253, 0.5);
         }
 
         /* --- CUENTA REGRESIVA --- */
@@ -221,27 +234,28 @@
         }
         .time-num { font-family: var(--font-title); font-size: 2.2rem; color: #fff; line-height: 1;}
         .time-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ice-dark); margin-top: 5px;}
-        .time-sep { font-family: var(--font-title); font-size: 2rem; color: rgba(255,255,255,0.3); }
+        .time-sep { font-family: var(--font-title); font-size: 2rem; color: rgba(255,255,255,0.5); }
 
         /* --- BOTONES PREMIUM --- */
         .btn {
             display: inline-flex; justify-content: center; align-items: center; gap: 10px;
             width: 100%; max-width: 280px; margin: 10px auto; padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.4);
             color: var(--ice-light);
             border: 1px solid rgba(186, 230, 253, 0.4);
             border-radius: 30px;
             font-family: var(--font-body); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px;
             text-decoration: none; cursor: pointer; transition: all 0.3s ease;
+            text-shadow: none;
         }
-        .btn:hover { background: rgba(186, 230, 253, 0.15); border-color: var(--ice-mid); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); color: #fff;}
-        .btn-wsp { background: rgba(37, 211, 102, 0.1); border-color: #25d366; color: #fff; }
-        .btn-wsp:hover { background: rgba(37, 211, 102, 0.3); border-color: #25d366; }
+        .btn:hover { background: rgba(186, 230, 253, 0.2); border-color: var(--ice-mid); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); color: #fff;}
+        .btn-wsp { background: rgba(37, 211, 102, 0.2); border-color: #25d366; color: #fff; }
+        .btn-wsp:hover { background: rgba(37, 211, 102, 0.4); border-color: #25d366; }
 
         /* --- LOCATIONS --- */
-        .location-box { margin-bottom: 50px; }
-        .location-icon { font-size: 2.5rem; color: var(--ice-dark); margin-bottom: 15px; }
-        .map-iframe { width: 100%; height: 220px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin: 20px 0; filter: grayscale(20%) contrast(1.2); }
+        .location-box { margin-bottom: 50px; background: rgba(0,0,0,0.2); padding: 25px 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .location-icon { font-size: 2.5rem; color: var(--ice-dark); margin-bottom: 15px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8)); }
+        .map-iframe { width: 100%; height: 220px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); margin: 20px 0; filter: grayscale(10%) contrast(1.1); }
 
         /* --- GALERÍA --- */
         .gallery-grid {
@@ -250,7 +264,7 @@
         .gallery-item {
             width: 100%; aspect-ratio: 3/4;
             border-radius: 12px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
             cursor: pointer; position: relative;
         }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
@@ -268,12 +282,13 @@
         /* --- INPUT --- */
         .input-glass {
             width: 100%; max-width: 280px; padding: 15px 20px; margin-bottom: 15px;
-            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3);
             border-radius: 30px; color: #fff; font-family: var(--font-body); font-size: 1rem;
             text-align: center; outline: none; transition: 0.3s;
+            text-shadow: none;
         }
-        .input-glass::placeholder { color: rgba(255,255,255,0.5); }
-        .input-glass:focus { border-color: var(--ice-mid); background: rgba(0,0,0,0.5); }
+        .input-glass::placeholder { color: rgba(255,255,255,0.6); text-shadow: none; }
+        .input-glass:focus { border-color: var(--ice-mid); background: rgba(0,0,0,0.7); }
 
         /* --- AUDIO STICKY --- */
         .audio-float {
@@ -298,8 +313,8 @@
     <canvas id="snow-canvas"></canvas>
 
     <div id="door-wrapper">
-        <div class="door door-left"><div class="door-img"></div></div>
-        <div class="door door-right"><div class="door-img"></div></div>
+        <div class="door door-left"><div class="door-bg"></div></div>
+        <div class="door door-right"><div class="door-bg"></div></div>
         
         <div class="seal-btn" onclick="openInvitation()">
             <div class="seal-ring"><i class="fas fa-snowflake"></i></div>
@@ -375,10 +390,10 @@
             </div>
 
             <h2 class="section-title" data-aos="fade-up">Código de Vestimenta</h2>
-            <div data-aos="zoom-in" style="margin-bottom: 40px;">
-                <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--ice-mid); margin-bottom: 15px;"></i>
+            <div data-aos="zoom-in" style="margin-bottom: 40px; background: rgba(0,0,0,0.2); padding: 25px 15px; border-radius: 15px;">
+                <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--ice-mid); margin-bottom: 15px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8));"></i>
                 <h3 style="font-family: var(--font-body); font-weight: 500; font-size: 1.2rem; letter-spacing: 3px; color: #fff;">FORMAL</h3>
-                <p style="font-size: 0.85rem; color: #ff8787; margin-top: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px;">
+                <p style="font-size: 0.85rem; color: #ff8787; margin-top: 15px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,135,135,0.2);">
                     Favor de evitar los colores: Azul cielo, Azul marino y Plateado.
                 </p>
             </div>
@@ -391,8 +406,8 @@
                     <i class="fas fa-gift"></i> Mesa Liverpool
                 </a>
                 
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <i class="fas fa-envelope-open-text" style="font-size: 2rem; color: var(--ice-mid); margin-bottom: 10px;"></i>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-envelope-open-text" style="font-size: 2rem; color: var(--ice-mid); margin-bottom: 10px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.8));"></i>
                     <h3 style="font-family: var(--font-body); font-size: 1.1rem; color: #fff;">Lluvia de Sobres</h3>
                     <p style="font-size: 0.85rem; color: var(--silver); margin-top: 5px;">Habrá un buzón en la recepción</p>
                 </div>
