@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500;700&family=Pinyon+Script&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -182,6 +182,13 @@
         .subtitle { font-size: 1.2rem; letter-spacing: 5px; color: #fff; opacity: 0.9; text-transform: uppercase; }
         .message { font-family: var(--font-title); font-style: italic; font-size: 1.3rem; line-height: 1.6; color: #f1f5f9; margin: 30px 0;}
 
+        /* Nombres en Cursiva Elegante */
+        .name-cursive {
+            font-family: var(--font-title); font-style: italic; font-weight: 600;
+            font-size: 1.5rem; letter-spacing: 1px; color: #fff; margin-top: 5px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
         /* Iconos con Glow */
         .glow-icon { font-size: 2.5rem; color: var(--ice-mid); margin-bottom: 15px; filter: drop-shadow(0 0 8px var(--ice-mid));}
 
@@ -228,6 +235,7 @@
         /* --- LOCATIONS CARDS --- */
         .location-card { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05);}
         .map-iframe { width: 100%; height: 230px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin: 20px 0; }
+        .location-address { color: #94a3b8; font-size: 0.9rem; margin-top: 8px; line-height: 1.4; padding: 0 10px; }
 
         /* --- CÓDIGO VESTIMENTA REDESIGN --- */
         .vestimenta-box {
@@ -284,6 +292,7 @@
         @media (max-width: 480px) {
             h1.name-neon { font-size: 4.8rem; }
             .glass-frame { padding: 50px 20px; }
+            .name-cursive { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -324,15 +333,15 @@
             <div class="section-divider"></div>
 
             <div data-aos="fade-up">
-                <div class="names-block" style="margin-bottom: 25px;">
+                <div class="names-block" style="margin-bottom: 30px;">
                     <span class="names-label" style="font-size: 0.8rem; color: var(--ice-mid); text-transform: uppercase; letter-spacing: 2px;">Mis Padres</span>
-                    <p style="font-size: 1.1rem; color: #fff; margin-top: 5px;">Ruth Aleli Barragan Zamora</p>
-                    <p style="font-size: 1.1rem; color: #fff;">Rogelio Torres Jimenez</p>
+                    <p class="name-cursive">Ruth Aleli Barragan Zamora</p>
+                    <p class="name-cursive">Rogelio Torres Jimenez</p>
                 </div>
                 <div class="names-block">
                     <span class="names-label" style="font-size: 0.8rem; color: var(--ice-mid); text-transform: uppercase; letter-spacing: 2px;">Mis Padrinos</span>
-                    <p style="font-size: 1.1rem; color: #fff; margin-top: 5px;">Alma Lidia Nequiz Zamora</p>
-                    <p style="font-size: 1.1rem; color: #fff;">Alberto Torres Barriga</p>
+                    <p class="name-cursive">Alma Lidia Nequiz Zamora</p>
+                    <p class="name-cursive">Alberto Torres Barriga</p>
                 </div>
             </div>
 
@@ -367,8 +376,9 @@
                 <i class="fas fa-church glow-icon"></i>
                 <h3>Ceremonia Religiosa</h3>
                 <p style="font-size: 1.1rem; margin: 5px 0;">6:30 P.M.</p>
-                <p style="color: #cbd5e1; font-size: 0.9rem;">Instalaciones de Eventos Casablanca</p>
-                <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15053.483167195862!2d-99.1677!3d19.4284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzQyLjIiTiA5OcKwMTAnMDMuNyJX!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx" loading="lazy"></iframe>
+                <p style="color: #cbd5e1; font-size: 1rem; font-weight: 500;">Instalaciones de Eventos Casablanca</p>
+                <p class="location-address">11 de Agosto de 1859 907, Leyes de Reforma 3ra Secc, Iztapalapa, 09310 Ciudad de México</p>
+                <iframe class="map-iframe" src="https://maps.google.com/maps?q=11%20de%20Agosto%20de%201859%20907,%20Leyes%20de%20Reforma%203ra%20Secc,%20Iztapalapa,%2009310%20Ciudad%20de%20M%C3%A9xico&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
                 <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn"><i class="fas fa-map-marker-alt"></i> Ver en Mapa</a>
             </div>
 
@@ -376,8 +386,9 @@
                 <i class="fas fa-glass-cheers glow-icon"></i>
                 <h3>Recepción</h3>
                 <p style="font-size: 1.1rem; margin: 5px 0;">7:00 P.M.</p>
-                <p style="color: #cbd5e1; font-size: 0.9rem;">Eventos Casablanca</p>
-                <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15053.483167195862!2d-99.1677!3d19.4284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzQyLjIiTiA5OcKwMTAnMDMuNyJX!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx" loading="lazy"></iframe>
+                <p style="color: #cbd5e1; font-size: 1rem; font-weight: 500;">Eventos Casablanca</p>
+                <p class="location-address">11 de Agosto de 1859 907, Leyes de Reforma 3ra Secc, Iztapalapa, 09310 Ciudad de México</p>
+                <iframe class="map-iframe" src="https://maps.google.com/maps?q=11%20de%20Agosto%20de%201859%20907,%20Leyes%20de%20Reforma%203ra%20Secc,%20Iztapalapa,%2009310%20Ciudad%20de%20M%C3%A9xico&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
                 <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn"><i class="fas fa-map-marker-alt"></i> Ver en Mapa</a>
             </div>
 
