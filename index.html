@@ -3,478 +3,597 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis XV Michelle - Frozen Experience</title>
+    <title>Mis XV Michelle - Invytia Premium</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Alex+Brush&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
-            --ice-blue: #bde0fe;
-            --elsa-blue: #48cae4;
-            --silver: #e2eafc;
-            --deep-royal: #03045e;
-            --frost: rgba(255, 255, 255, 0.15);
+            --ice-light: #e0f2fe;
+            --ice-mid: #bae6fd;
+            --ice-dark: #7dd3fc;
+            --silver: #f8fafc;
+            --text-light: #f1f5f9;
+            
+            --font-title: 'Cormorant Garamond', serif;
+            --font-name: 'Pinyon Script', cursive;
+            --font-body: 'Jost', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #000;
-            color: #fff;
+            font-family: var(--font-body);
+            color: var(--text-light);
+            background-color: #050b14;
             overflow-x: hidden;
+            overscroll-behavior-y: none;
         }
 
-        /* --- EFECTO APERTURA CORREDIZA --- */
+        /* --- BACKGROUND FIJO --- */
+        #fixed-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('assets/fondo.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+        }
+
+        /* --- PARTICULAS DE NIEVE --- */
+        #snow-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        /* --- APERTURA CORREDIZA --- */
         #door-wrapper {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 10000;
             display: flex;
             overflow: hidden;
-            transition: visibility 1.5s;
         }
 
         .door {
-            width: 50%;
-            height: 100%;
-            background-image: url('assets/apertura.jpg');
-            background-size: 200% 100%; /* Para que cada mitad cubra su lado */
-            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
             position: relative;
+            width: 50%; height: 100%;
+            overflow: hidden;
+            transition: transform 2s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        .door-left { background-position: left; border-right: 1px solid var(--ice-blue); }
-        .door-right { background-position: right; }
+        .door-img {
+            position: absolute;
+            top: 0;
+            width: 200%; /* El doble de su contenedor (50%) para cubrir toda la pantalla */
+            height: 100%;
+            background-image: url('assets/apertura.jpg');
+            background-size: cover;
+            background-position: center;
+        }
 
+        .door-left .door-img { left: 0; }
+        .door-right .door-img { right: 0; transform: translateX(50%); }
+
+        /* Estado Abierto */
         #door-wrapper.open .door-left { transform: translateX(-100%); }
         #door-wrapper.open .door-right { transform: translateX(100%); }
 
-        .unlock-seal {
+        .seal-btn {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10001;
-            width: 120px; height: 120px;
-            background: radial-gradient(circle, var(--ice-blue), transparent);
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
             cursor: pointer;
-            box-shadow: 0 0 50px var(--elsa-blue);
-            animation: pulse 2s infinite;
-            transition: opacity 0.5s;
-        }
-        .unlock-seal i { font-size: 3rem; color: #fff; text-shadow: 0 0 10px var(--deep-royal); }
-
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            transition: opacity 0.5s ease;
         }
 
-        /* --- FONDO Y AURORAS --- */
-        .main-container {
+        .seal-ring {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.4);
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 30px rgba(186, 230, 253, 0.3);
+            animation: breathe 3s infinite ease-in-out;
+        }
+        .seal-ring i { font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px var(--ice-mid); }
+        .seal-text {
+            font-family: var(--font-title); letter-spacing: 2px;
+            font-size: 0.9rem; text-transform: uppercase; color: #fff;
+        }
+
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 20px rgba(186, 230, 253, 0.2); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(186, 230, 253, 0.6); transform: scale(1.05); }
+        }
+
+        /* --- GLASSMORPHISM CONTENEDOR --- */
+        #scroll-wrapper {
             position: relative;
-            background-image: url('assets/fondo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: none; /* Se activa al abrir */
+            width: 100%; min-height: 100vh;
+            display: none; /* Se muestra al abrir */
+            padding: 40px 15px;
         }
 
-        .aurora-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.6;
-            filter: blur(100px);
-            background: linear-gradient(120deg, #03045e, #023e8a, #0077b6, #48cae4);
-            background-size: 400% 400%;
-            animation: auroraMove 15s ease infinite;
-        }
-
-        @keyframes auroraMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        #ice-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* --- CONTENIDO --- */
-        .glass-content {
-            position: relative;
-            z-index: 5;
-            max-width: 600px;
+        .glass-frame {
+            max-width: 550px;
             margin: 0 auto;
-            padding: 60px 20px;
-            background: rgba(10, 25, 47, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(12, 20, 35, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            padding: 60px 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .flower-divider {
-            width: 100%; max-width: 300px; margin: 20px auto;
-            filter: drop-shadow(0 0 5px var(--ice-blue));
+        /* Aurora sutil dentro del frame */
+        .glass-aurora {
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(186, 230, 253, 0.1), transparent 60%),
+                        radial-gradient(circle at 80% 20%, rgba(125, 211, 252, 0.05), transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+            animation: rotateAurora 20s linear infinite;
         }
+        @keyframes rotateAurora { 100% { transform: rotate(360deg); } }
 
-        h1, h2, h3 { font-family: 'Cinzel', serif; text-align: center; color: var(--ice-blue); }
-        .name-michelle {
-            font-family: 'Alex Brush', cursive;
-            font-size: 5rem;
+        /* --- TIPOGRAFÍA Y ESTILOS --- */
+        h1.name {
+            font-family: var(--font-name);
+            font-size: 5.5rem;
+            line-height: 1.1;
             color: #fff;
-            text-shadow: 0 0 20px var(--elsa-blue);
-            margin: 10px 0;
+            text-shadow: 0 0 20px rgba(186, 230, 253, 0.5);
+            margin: 20px 0;
+            font-weight: normal;
         }
 
-        .special-msg {
-            font-size: 1rem; line-height: 1.8; text-align: center;
-            margin: 40px 0; font-style: italic; color: var(--silver);
+        h2, h3 {
+            font-family: var(--font-title);
+            color: var(--ice-mid);
+            font-weight: 400;
+            letter-spacing: 2px;
         }
 
-        /* --- CALENDARIO WIDGET --- */
-        .calendar-widget {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--ice-blue);
-            padding: 20px; border-radius: 15px;
-            margin: 30px auto; max-width: 320px;
+        .subtitle { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 10px; color: var(--silver); }
+        .section-title { font-size: 2rem; margin: 40px 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;}
+        
+        .divider-icon { font-size: 1.5rem; color: var(--ice-light); opacity: 0.7; margin: 20px 0; }
+        
+        .message {
+            font-family: var(--font-title);
+            font-style: italic; font-size: 1.3rem; line-height: 1.6;
+            color: var(--silver); margin: 30px 0; padding: 0 15px;
         }
-        .cal-header { font-weight: bold; margin-bottom: 10px; display: block; text-transform: uppercase; letter-spacing: 2px;}
+
+        .names-block { margin: 20px 0; }
+        .names-block p { font-size: 1.1rem; margin: 5px 0; color: #fff; }
+        .names-label { font-size: 0.8rem; color: var(--ice-dark); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block;}
+
+        /* --- CALENDARIO PREMIUM --- */
+        .premium-calendar {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px 20px;
+            margin: 30px auto;
+            max-width: 320px;
+        }
+        .cal-month { font-family: var(--font-title); font-size: 1.6rem; color: var(--ice-mid); margin-bottom: 20px; }
         .cal-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr);
-            gap: 5px; text-align: center; font-size: 0.8rem;
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;
+            text-align: center; font-size: 0.9rem;
         }
-        .cal-day-name { color: var(--elsa-blue); font-weight: bold; margin-bottom: 5px;}
-        .cal-day { padding: 8px; border-radius: 5px; }
-        .cal-active { 
-            background: var(--elsa-blue); color: #000; font-weight: bold;
-            position: relative; box-shadow: 0 0 15px var(--elsa-blue);
-        }
-        .cal-active::after {
-            content: '\f2dc'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-            position: absolute; top: -10px; right: -10px; color: #fff; font-size: 0.8rem;
+        .cal-head { color: var(--ice-dark); font-weight: 500; font-size: 0.8rem; }
+        .cal-day { padding: 5px; color: rgba(255,255,255,0.8); }
+        .cal-active {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--ice-mid);
+            border-radius: 50%;
+            color: #fff;
+            position: relative;
+            box-shadow: 0 0 15px rgba(186, 230, 253, 0.4);
         }
 
-        /* --- BOTONES --- */
+        /* --- CUENTA REGRESIVA --- */
+        .countdown { display: flex; justify-content: center; gap: 15px; margin: 40px 0; }
+        .time-box {
+            display: flex; flex-direction: column; align-items: center;
+            min-width: 60px;
+        }
+        .time-num { font-family: var(--font-title); font-size: 2.2rem; color: #fff; line-height: 1;}
+        .time-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ice-dark); margin-top: 5px;}
+        .time-sep { font-family: var(--font-title); font-size: 2rem; color: rgba(255,255,255,0.3); }
+
+        /* --- BOTONES PREMIUM --- */
         .btn {
-            display: block; width: 100%; max-width: 280px;
-            margin: 15px auto; padding: 15px;
-            background: linear-gradient(135deg, #48cae4, #0077b6);
-            color: #fff; border: none; border-radius: 50px;
-            font-family: 'Cinzel', serif; font-weight: bold;
-            text-decoration: none; text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: 0.3s; cursor: pointer;
+            display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+            width: 100%; max-width: 280px; margin: 10px auto; padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--ice-light);
+            border: 1px solid rgba(186, 230, 253, 0.4);
+            border-radius: 30px;
+            font-family: var(--font-body); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px;
+            text-decoration: none; cursor: pointer; transition: all 0.3s ease;
         }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--elsa-blue); }
+        .btn:hover { background: rgba(186, 230, 253, 0.15); border-color: var(--ice-mid); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); color: #fff;}
+        .btn-wsp { background: rgba(37, 211, 102, 0.1); border-color: #25d366; color: #fff; }
+        .btn-wsp:hover { background: rgba(37, 211, 102, 0.3); border-color: #25d366; }
 
-        /* --- CUENTA ATRÁS --- */
-        .countdown { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        .count-box { 
-            background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; min-width: 65px;
-            border: 1px solid var(--frost);
-        }
-        .count-num { display: block; font-size: 1.5rem; font-weight: bold; color: var(--elsa-blue); }
-        .count-lab { font-size: 0.6rem; text-transform: uppercase; }
+        /* --- LOCATIONS --- */
+        .location-box { margin-bottom: 50px; }
+        .location-icon { font-size: 2.5rem; color: var(--ice-dark); margin-bottom: 15px; }
+        .map-iframe { width: 100%; height: 220px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin: 20px 0; filter: grayscale(20%) contrast(1.2); }
 
         /* --- GALERÍA --- */
-        .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
-        .gallery-img { 
-            width: 100%; aspect-ratio: 1; object-fit: cover; 
-            border-radius: 10px; border: 2px solid var(--frost); cursor: pointer;
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px;
         }
+        .gallery-item {
+            width: 100%; aspect-ratio: 3/4;
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; position: relative;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .gallery-item:hover img { transform: scale(1.05); }
+
+        /* Lightbox */
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            z-index: 20000; display: none; justify-content: center; align-items: center;
+        }
+        #lightbox img { max-width: 95%; max-height: 90vh; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); }
+        .close-btn { position: absolute; top: 30px; right: 30px; font-size: 2rem; color: #fff; cursor: pointer; }
+
+        /* --- INPUT --- */
+        .input-glass {
+            width: 100%; max-width: 280px; padding: 15px 20px; margin-bottom: 15px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px; color: #fff; font-family: var(--font-body); font-size: 1rem;
+            text-align: center; outline: none; transition: 0.3s;
+        }
+        .input-glass::placeholder { color: rgba(255,255,255,0.5); }
+        .input-glass:focus { border-color: var(--ice-mid); background: rgba(0,0,0,0.5); }
 
         /* --- AUDIO STICKY --- */
-        .audio-btn {
-            position: fixed; bottom: 20px; left: 20px;
-            width: 50px; height: 50px; border-radius: 50%;
-            background: var(--elsa-blue); color: #000;
+        .audio-float {
+            position: fixed; bottom: 25px; right: 25px;
+            width: 55px; height: 55px; border-radius: 50%;
+            background: rgba(12, 20, 35, 0.8); backdrop-filter: blur(5px);
+            border: 1px solid rgba(186, 230, 253, 0.4);
             display: flex; justify-content: center; align-items: center;
-            z-index: 1000; cursor: pointer; box-shadow: 0 0 15px var(--elsa-blue);
+            color: #fff; font-size: 1.2rem; cursor: pointer; z-index: 15000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s;
         }
-
-        /* --- MAPS --- */
-        .map-frame { 
-            width: 100%; height: 200px; border-radius: 15px; 
-            margin: 15px 0; border: 1px solid var(--elsa-blue); 
-        }
-
-        #flash {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: #fff; z-index: 11000; opacity: 0; pointer-events: none;
-        }
+        .audio-float.playing { box-shadow: 0 0 20px rgba(186, 230, 253, 0.4); border-color: var(--ice-mid); }
+        .audio-float:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
 
+    <audio id="audio-song" loop src="assets/song.mp3"></audio>
+    <audio id="audio-sfx" src="assets/destello.mp3"></audio>
+
+    <div id="fixed-bg"></div>
+    <canvas id="snow-canvas"></canvas>
+
     <div id="door-wrapper">
-        <div class="unlock-seal" onclick="openMagic()">
-            <i class="fas fa-snowflake"></i>
+        <div class="door door-left"><div class="door-img"></div></div>
+        <div class="door door-right"><div class="door-img"></div></div>
+        
+        <div class="seal-btn" onclick="openInvitation()">
+            <div class="seal-ring"><i class="fas fa-snowflake"></i></div>
+            <span class="seal-text">Tocar para abrir</span>
         </div>
-        <div class="door door-left"></div>
-        <div class="door door-right"></div>
     </div>
 
-    <div id="flash"></div>
+    <div id="scroll-wrapper">
+        <div class="glass-frame">
+            <div class="glass-aurora"></div>
 
-    <audio id="song" loop src="assets/song.mp3"></audio>
-    <audio id="magic-sfx" src="assets/destello.mp3"></audio>
-
-    <div class="audio-btn" onclick="toggleMusic()">
-        <i id="music-icon" class="fas fa-music"></i>
-    </div>
-
-    <div class="main-container" id="main-content">
-        <div class="aurora-bg"></div>
-        <canvas id="ice-canvas"></canvas>
-
-        <div class="glass-content">
-            <div data-aos="fade-down">
-                <h3>Mis XV Años</h3>
-                <h1 class="name-michelle">Michelle</h1>
-                <img src="https://img.icons8.com/ios/100/ffffff/snowflake.png" class="flower-divider" alt="divider">
+            <div data-aos="fade-down" data-aos-duration="1500">
+                <h2 class="subtitle">Mis XV Años</h2>
+                <h1 class="name">Michelle</h1>
+                <i class="fas fa-gem divider-icon"></i>
             </div>
 
-            <div class="special-msg" data-aos="fade-up">
+            <p class="message" data-aos="fade-up">
                 "Con inmensa alegría y gratitud a Dios, celebramos los 15 años de nuestra querida Mich. Acompáñanos en este día tan especial para compartir juntos la magia, los sueños y la felicidad de esta hermosa etapa de su vida."
-            </div>
+            </p>
 
-            <div class="countdown" id="timer">
-                <div class="count-box"><span class="count-num" id="days">00</span><span class="count-lab">Días</span></div>
-                <div class="count-box"><span class="count-num" id="hours">00</span><span class="count-lab">Hrs</span></div>
-                <div class="count-box"><span class="count-num" id="mins">00</span><span class="count-lab">Min</span></div>
-                <div class="count-box"><span class="count-num" id="secs">00</span><span class="count-lab">Seg</span></div>
-            </div>
-
-            <div style="text-align: center; margin-bottom: 40px;" data-aos="zoom-in">
-                <p style="letter-spacing: 3px; font-weight: bold; color: var(--elsa-blue);">MIS PADRES</p>
+            <div data-aos="fade-up" class="names-block" style="margin-top: 40px;">
+                <span class="names-label">Mis Padres</span>
                 <p>Ruth Aleli Barragan Zamora</p>
                 <p>Rogelio Torres Jimenez</p>
-                <br>
-                <p style="letter-spacing: 3px; font-weight: bold; color: var(--elsa-blue);">MIS PADRINOS</p>
+            </div>
+
+            <div data-aos="fade-up" class="names-block">
+                <span class="names-label">Mis Padrinos</span>
                 <p>Alma Lidia Nequiz Zamora</p>
                 <p>Alberto Torres Barriga</p>
             </div>
 
-            <div class="calendar-widget" data-aos="flip-left">
-                <span class="cal-header">Agosto 2026</span>
-                <div class="cal-grid" id="calendar">
-                    <div class="cal-day-name">D</div><div class="cal-day-name">L</div><div class="cal-day-name">M</div><div class="cal-day-name">M</div><div class="cal-day-name">J</div><div class="cal-day-name">V</div><div class="cal-day-name">S</div>
+            <h2 class="section-title" data-aos="fade-up">El Gran Día</h2>
+
+            <div class="premium-calendar" data-aos="zoom-in">
+                <div class="cal-month">Agosto 2026</div>
+                <div class="cal-grid" id="calendar-grid">
+                    <div class="cal-head">D</div><div class="cal-head">L</div><div class="cal-head">M</div><div class="cal-head">M</div><div class="cal-head">J</div><div class="cal-head">V</div><div class="cal-head">S</div>
                     </div>
             </div>
-            <button class="btn" onclick="saveTheDate()">
-                <i class="fas fa-calendar-check"></i> Save The Date
-            </button>
 
-            <div style="margin-top: 60px;" data-aos="fade-up">
-                <i class="fas fa-church" style="font-size: 2rem; color: var(--elsa-blue);"></i>
-                <h2>Ceremonia</h2>
-                <p>6:30 P.M.</p>
-                <p>Instalaciones de Eventos Casablanca</p>
-                <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.661!2d-99.16!3d19.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI0JzAwLjAiTiA5OcKwMDknMzYuMCJX!5e0!3m2!1ses!2smx!4v1620000000000"></iframe>
-                <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn">Abrir en Google Maps</a>
+            <div class="countdown" id="countdown" data-aos="fade-up">
+                <div class="time-box"><span class="time-num" id="cd-days">00</span><span class="time-label">Días</span></div>
+                <span class="time-sep">:</span>
+                <div class="time-box"><span class="time-num" id="cd-hours">00</span><span class="time-label">Hrs</span></div>
+                <span class="time-sep">:</span>
+                <div class="time-box"><span class="time-num" id="cd-mins">00</span><span class="time-label">Min</span></div>
+                <span class="time-sep">:</span>
+                <div class="time-box"><span class="time-num" id="cd-secs">00</span><span class="time-label">Seg</span></div>
             </div>
 
-            <div style="margin-top: 60px;" data-aos="fade-up">
-                <i class="fas fa-glass-cheers" style="font-size: 2rem; color: var(--elsa-blue);"></i>
-                <h2>Recepción</h2>
-                <p>7:00 P.M.</p>
-                <p>Eventos Casablanca</p>
-                <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.661!2d-99.16!3d19.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI0JzAwLjAiTiA5OcKwMDknMzYuMCJX!5e0!3m2!1ses!2smx!4v1620000000000"></iframe>
-                <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn">Abrir en Google Maps</a>
+            <button class="btn" onclick="saveDate()"><i class="far fa-calendar-plus"></i> Guardar Fecha</button>
+
+            <h2 class="section-title" data-aos="fade-up">Ubicaciones</h2>
+
+            <div class="location-box" data-aos="fade-up">
+                <i class="fas fa-church location-icon"></i>
+                <h3>Ceremonia Religiosa</h3>
+                <p style="margin: 10px 0; font-size: 1.1rem;">6:30 P.M.</p>
+                <p style="color: var(--silver); font-size: 0.9rem;">Instalaciones de Eventos Casablanca</p>
+                <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15053.483167195862!2d-99.1677!3d19.4284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzQyLjIiTiA5OcKwMTAnMDMuNyJX!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx" loading="lazy"></iframe>
+                <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn"><i class="fas fa-map-marker-alt"></i> Ver en Mapa</a>
             </div>
 
-            <div style="text-align: center; margin-top: 60px;" data-aos="zoom-in">
-                <i class="fas fa-user-tie" style="font-size: 2rem; color: var(--elsa-blue);"></i>
-                <h2>Código de Vestimenta</h2>
-                <p>FORMAL</p>
-                <p style="font-size: 0.8rem; color: #ff4d4d; margin-top: 10px;">
-                    * Favor de evitar azul cielo, azul marino y plateado.
+            <div class="location-box" data-aos="fade-up">
+                <i class="fas fa-glass-cheers location-icon"></i>
+                <h3>Recepción</h3>
+                <p style="margin: 10px 0; font-size: 1.1rem;">7:00 P.M.</p>
+                <p style="color: var(--silver); font-size: 0.9rem;">Eventos Casablanca</p>
+                <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15053.483167195862!2d-99.1677!3d19.4284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDI1JzQyLjIiTiA5OcKwMTAnMDMuNyJX!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx" loading="lazy"></iframe>
+                <a href="https://share.google/bvy5890Kg9v39ACS7" target="_blank" class="btn"><i class="fas fa-map-marker-alt"></i> Ver en Mapa</a>
+            </div>
+
+            <h2 class="section-title" data-aos="fade-up">Código de Vestimenta</h2>
+            <div data-aos="zoom-in" style="margin-bottom: 40px;">
+                <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--ice-mid); margin-bottom: 15px;"></i>
+                <h3 style="font-family: var(--font-body); font-weight: 500; font-size: 1.2rem; letter-spacing: 3px; color: #fff;">FORMAL</h3>
+                <p style="font-size: 0.85rem; color: #ff8787; margin-top: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px;">
+                    Favor de evitar los colores: Azul cielo, Azul marino y Plateado.
                 </p>
             </div>
 
-            <div style="text-align: center; margin-top: 60px;" data-aos="fade-up">
-                <i class="fas fa-gift" style="font-size: 2rem; color: var(--elsa-blue);"></i>
-                <h2>Mesa de Regalos</h2>
-                <a href="https://mesaderegalos.liverpool.com.mx/gestiondeeventos/listaderegalos/52003572" target="_blank" class="btn">Liverpool</a>
-                <p style="margin-top: 20px;">Lluvia de Sobres</p>
-                <i class="fas fa-envelope-open-text" style="font-size: 1.5rem; opacity: 0.7;"></i>
-            </div>
-
-            <div style="margin-top: 60px;">
-                <h2>Galería de Fotos</h2>
-                <div class="gallery">
-                    <img src="assets/foto1.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto2.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto3.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto4.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto5.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto6.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto7.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto8.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto9.jpg" class="gallery-img" onclick="zoomImg(this)">
-                    <img src="assets/foto10.jpg" class="gallery-img" onclick="zoomImg(this)">
+            <h2 class="section-title" data-aos="fade-up">Mesa de Regalos</h2>
+            <div data-aos="fade-up" style="margin-bottom: 50px;">
+                <p style="margin-bottom: 25px; color: var(--silver);">Tu presencia es mi mejor regalo, pero si deseas tener un detalle conmigo:</p>
+                
+                <a href="https://mesaderegalos.liverpool.com.mx/gestiondeeventos/listaderegalos/52003572" target="_blank" class="btn" style="margin-bottom: 20px;">
+                    <i class="fas fa-gift"></i> Mesa Liverpool
+                </a>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <i class="fas fa-envelope-open-text" style="font-size: 2rem; color: var(--ice-mid); margin-bottom: 10px;"></i>
+                    <h3 style="font-family: var(--font-body); font-size: 1.1rem; color: #fff;">Lluvia de Sobres</h3>
+                    <p style="font-size: 0.85rem; color: var(--silver); margin-top: 5px;">Habrá un buzón en la recepción</p>
                 </div>
             </div>
 
-            <div style="margin-top: 60px; text-align: center;" data-aos="fade-up">
-                <h2>Confirmar Asistencia</h2>
-                <input type="text" id="guest-name" placeholder="Tu nombre aquí" style="width: 100%; padding: 15px; border-radius: 10px; border: none; margin-bottom: 10px;">
-                <button class="btn" onclick="confirmWhatsapp()" style="background: #25d366;">
-                    <i class="fab fa-whatsapp"></i> Confirmar vía WhatsApp
+            <h2 class="section-title" data-aos="fade-up">Nuestros Momentos</h2>
+            <div class="gallery-grid" data-aos="fade-up">
+                <div class="gallery-item" onclick="openLightbox('assets/foto1.jpg')"><img src="assets/foto1.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+1'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto2.jpg')"><img src="assets/foto2.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+2'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto3.jpg')"><img src="assets/foto3.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+3'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto4.jpg')"><img src="assets/foto4.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+4'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto5.jpg')"><img src="assets/foto5.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+5'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto6.jpg')"><img src="assets/foto6.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+6'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto7.jpg')"><img src="assets/foto7.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+7'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto8.jpg')"><img src="assets/foto8.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+8'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto9.jpg')"><img src="assets/foto9.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+9'"></div>
+                <div class="gallery-item" onclick="openLightbox('assets/foto10.jpg')"><img src="assets/foto10.jpg" alt="Foto" onerror="this.src='https://placehold.co/300x400/0f172a/e0f2fe?text=Foto+10'"></div>
+            </div>
+
+            <h2 class="section-title" data-aos="fade-up" style="margin-top: 60px;">Confirmar Asistencia</h2>
+            <div data-aos="zoom-in" style="margin-bottom: 20px;">
+                <p style="margin-bottom: 20px; color: var(--silver);">Por favor, ingresa tu nombre y confirma vía WhatsApp.</p>
+                <input type="text" id="guest-name" class="input-glass" placeholder="Tu nombre / familia">
+                <button class="btn btn-wsp" onclick="sendRSVP()">
+                    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Confirmar Asistencia
                 </button>
             </div>
         </div>
     </div>
 
+    <div id="audio-btn" class="audio-float" onclick="toggleAudio()" style="display: none;">
+        <i id="audio-icon" class="fas fa-volume-up"></i>
+    </div>
+
+    <div id="lightbox" onclick="closeLightbox(event)">
+        <i class="fas fa-times close-btn" onclick="closeLightbox(event)"></i>
+        <img id="lightbox-img" src="">
+    </div>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000 });
+        // Inicializar AOS
+        AOS.init({ once: true, offset: 50 });
 
-        // --- LÓGICA APERTURA ---
-        function openMagic() {
-            document.getElementById('magic-sfx').play();
-            
-            // Flash de hielo
-            const flash = document.getElementById('flash');
-            flash.style.opacity = '1';
-            
-            setTimeout(() => {
-                document.getElementById('door-wrapper').classList.add('open');
-                document.querySelector('.unlock-seal').style.opacity = '0';
-                flash.style.opacity = '0';
-                
-                document.getElementById('main-content').style.display = 'block';
-                document.getElementById('song').play();
-                initIceParticles();
-                renderCalendar();
-            }, 300);
+        const song = document.getElementById('audio-song');
+        const sfx = document.getElementById('audio-sfx');
+        const audioBtn = document.getElementById('audio-btn');
+        const audioIcon = document.getElementById('audio-icon');
+        let isPlaying = false;
 
+        // --- APERTURA ---
+        function openInvitation() {
+            document.querySelector('.seal-btn').style.opacity = '0';
+            sfx.play().catch(()=>{});
+            
+            // Abrir puertas
+            const wrapper = document.getElementById('door-wrapper');
+            wrapper.classList.add('open');
+
+            // Mostrar contenido debajo
+            document.getElementById('scroll-wrapper').style.display = 'block';
+            
+            // Iniciar Nieve y Musica
             setTimeout(() => {
-                document.getElementById('door-wrapper').style.visibility = 'hidden';
+                startSnow();
+                song.play().then(() => {
+                    isPlaying = true;
+                    audioBtn.style.display = 'flex';
+                    audioBtn.classList.add('playing');
+                }).catch(()=>{
+                    // Si el navegador bloquea autoplay
+                    audioBtn.style.display = 'flex';
+                    audioIcon.className = "fas fa-volume-mute";
+                });
+                wrapper.style.display = 'none'; // Quitar del DOM visual
+                buildCalendar(); // Construir calendario
             }, 1800);
         }
 
-        // --- CALENDARIO AGOSTO 2026 ---
-        function renderCalendar() {
-            const cal = document.getElementById('calendar');
-            // Agosto 2026 empieza en Sábado (día 6 de la semana index 0)
-            // Agregamos espacios vacíos
-            for(let i=0; i<6; i++) {
-                const empty = document.createElement('div');
-                cal.appendChild(empty);
+        // --- AUDIO CONTROL ---
+        function toggleAudio() {
+            if (isPlaying) {
+                song.pause();
+                audioIcon.className = "fas fa-volume-mute";
+                audioBtn.classList.remove('playing');
+            } else {
+                song.play();
+                audioIcon.className = "fas fa-volume-up";
+                audioBtn.classList.add('playing');
             }
-            // Días del mes
+            isPlaying = !isPlaying;
+        }
+
+        // --- CALENDARIO AGOSTO 2026 ---
+        function buildCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            // Agosto 2026 inicia en sábado (índice 6)
+            for(let i=0; i<6; i++) {
+                let div = document.createElement('div');
+                grid.appendChild(div);
+            }
             for(let d=1; d<=31; d++) {
-                const day = document.createElement('div');
-                day.className = d === 21 ? 'cal-day cal-active' : 'cal-day';
-                day.innerText = d;
-                cal.appendChild(day);
+                let div = document.createElement('div');
+                div.className = d === 21 ? 'cal-day cal-active' : 'cal-day';
+                div.innerText = d;
+                grid.appendChild(div);
             }
         }
 
-        // --- CUENTA ATRÁS ---
-        const target = new Date("August 21, 2026 18:30:00").getTime();
+        // --- CUENTA REGRESIVA (21 Ago 2026 18:30) ---
+        const targetDate = new Date("August 21, 2026 18:30:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
-            const diff = target - now;
-            document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            document.getElementById('secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            const diff = targetDate - now;
+            if(diff < 0) return; // Evento pasó
+
+            document.getElementById('cd-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById('cd-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById('cd-mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById('cd-secs').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
         }, 1000);
 
         // --- SAVE THE DATE ---
-        function saveTheDate() {
-            const title = "Mis XV Michelle";
-            const date = "20260821T183000";
-            const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}/${date}&details=Evento+Casablanca&location=Casablanca`;
+        function saveDate() {
+            const url = "https://www.google.com/calendar/render?action=TEMPLATE&text=Mis+XV+Michelle&dates=20260821T233000Z/20260822T080000Z&details=Acomp%C3%A1%C3%B1anos+en+este+d%C3%ADa+tan+especial.&location=Eventos+Casablanca";
             window.open(url, '_blank');
         }
 
-        // --- WHATSAPP ---
-        function confirmWhatsapp() {
-            const name = document.getElementById('guest-name').value;
-            const text = `Hola Michelle! Soy ${name}, confirmo mi asistencia a tus XV años.`;
-            window.open(`https://wa.me/525544492911?text=${encodeURIComponent(text)}`);
+        // --- WHATSAPP RSVP ---
+        function sendRSVP() {
+            const name = document.getElementById('guest-name').value.trim();
+            if(!name) { alert("Por favor, ingresa tu nombre."); return; }
+            const msg = `¡Hola! Con mucha alegría confirmo mi asistencia a los XV años de Michelle. Mi nombre es: ${name}`;
+            window.open(`https://wa.me/525544492911?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // --- AUDIO ---
-        let musicOn = true;
-        function toggleMusic() {
-            const s = document.getElementById('song');
-            const icon = document.getElementById('music-icon');
-            if(musicOn) {
-                s.pause();
-                icon.className = "fas fa-volume-mute";
-            } else {
-                s.play();
-                icon.className = "fas fa-music";
+        // --- LIGHTBOX GALERÍA ---
+        const lightbox = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightbox-img');
+        
+        function openLightbox(src) {
+            lbImg.src = src;
+            lightbox.style.display = 'flex';
+        }
+        function closeLightbox(e) {
+            if(e.target.id === 'lightbox' || e.target.classList.contains('close-btn')) {
+                lightbox.style.display = 'none';
+                lbImg.src = '';
             }
-            musicOn = !musicOn;
         }
 
-        // --- ICE PARTICLES ---
-        function initIceParticles() {
-            const canvas = document.getElementById('ice-canvas');
+        // --- PARTICULAS DE NIEVE PREMIUM ---
+        function startSnow() {
+            const canvas = document.getElementById('snow-canvas');
+            canvas.style.opacity = '1';
             const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
 
-            let particles = [];
-            for(let i=0; i<60; i++) {
-                particles.push({
+            const flakes = [];
+            for(let i = 0; i < 70; i++) {
+                flakes.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    r: Math.random() * 3 + 1,
-                    d: Math.random() * 50,
-                    s: Math.random() * 1 + 0.5
+                    r: Math.random() * 2 + 1, // radio
+                    d: Math.random() * 70, // densidad
+                    a: Math.random() * Math.PI * 2 // angulo oscilacion
                 });
             }
 
-            function draw() {
+            function drawSnow() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
                 ctx.beginPath();
-                for(let p of particles) {
-                    ctx.moveTo(p.x, p.y);
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+                for(let f of flakes) {
+                    ctx.moveTo(f.x, f.y);
+                    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
                 }
                 ctx.fill();
-                update();
+                updateSnow();
+                requestAnimationFrame(drawSnow);
             }
 
-            function update() {
-                for(let p of particles) {
-                    p.y += p.s;
-                    p.x += Math.sin(p.d) * 0.5;
-                    if(p.y > canvas.height) p.y = -10;
+            function updateSnow() {
+                for(let f of flakes) {
+                    f.y += Math.cos(f.d) + 0.5 + f.r / 2; // velocidad caida
+                    f.a += 0.01;
+                    f.x += Math.sin(f.a) * 0.5; // viento lateral
+                    
+                    if(f.y > canvas.height) {
+                        f.y = -10;
+                        f.x = Math.random() * canvas.width;
+                    }
                 }
             }
-            setInterval(draw, 30);
-        }
-
-        // --- GALERIA ZOOM ---
-        function zoomImg(el) {
-            if(el.style.transform === "scale(1.5)") {
-                el.style.transform = "scale(1)";
-                el.style.zIndex = "1";
-            } else {
-                el.style.transform = "scale(1.5)";
-                el.style.zIndex = "100";
-                el.style.transition = "0.3s";
-            }
+            drawSnow();
         }
     </script>
 </body>
